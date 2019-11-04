@@ -1,0 +1,183 @@
+#include<stdio.h>
+#include<stdlib.h>
+struct Node{
+	int data;
+	struct Node* left;
+	struct Node* right;
+};
+struct Node* head = NULL;
+void insert(int x)
+{
+	struct Node* temp;
+	struct Node* r;
+	struct Node* t;
+	if(head==NULL){
+      temp = (struct Node*)malloc(sizeof(struct Node));
+      temp->data = x;
+      temp->left = temp->right=NULL;
+      head = temp;
+      return;
+	}
+	t = head;
+
+	while(t!=NULL)
+	{  
+		r = t;
+		if(x<t->data)
+			t = t->left;
+		else if(x>t->data)
+			t = t->right;
+
+		else
+			return;
+
+}
+
+	  temp = (struct Node*)malloc(sizeof(struct Node));
+      temp->data = x;
+      temp->left = temp->right=NULL;
+
+      if(x<r->data)
+      	r->left = temp;
+      else
+      	r->right = temp;
+
+
+}
+
+struct Node* Search (int x){
+	struct Node* tem;
+	tem = head;
+	while(tem!=NULL)
+	{
+		if(x==tem->data)
+		   return tem;
+		else if(x<tem->data)
+		   tem = tem->left;
+		else if(x>tem->data)
+		   tem = tem->right;
+	}
+return NULL;
+}
+struct Node* min(){
+	struct Node* temg;
+	temg = head;
+	while(temg->left!=NULL){
+		temg = temg->left;
+	}
+	return(temg);
+}
+struct Node* max(){
+	struct Node* temg;
+	temg = head;
+	while(temg->right!=NULL){
+		temg = temg->right;
+	}
+	return(temg);
+}
+void inorder(struct Node* p){
+	if(p){
+		inorder(p->left);
+		printf("%d\n",p->data);
+		inorder(p->right);
+	}
+}
+
+int height(struct Node* p){
+	int x;
+	int y;
+	if(p==NULL)
+	return 0;
+	x = height(p->left);
+	y = height(p->right);
+	return x<y?x+1:y+1;
+}
+
+struct Node* inpre(struct Node* p){
+	while(p && p->right!=NULL)
+		p=p->right;
+	return p;
+}
+struct Node* inpos(struct Node* p){
+	while(p && p->left!=NULL)
+		p=p->left;
+	return p;
+}
+struct Node* delete(struct Node* p,int x){
+	struct Node* q;
+	if(p==NULL){
+		return NULL;
+	}
+	if(p->left ==NULL && p->right == NULL)
+	{
+		if(p==head)
+			head = NULL;
+		free(p);
+		return NULL;
+	}
+	if(x<p->data)
+		p->left = delete(p->left,x);
+	else if(x>p->data)
+		p->right = delete(p->right,x);
+
+	else{
+		if(height(p->left)>height(p->right)){
+			q = inpre(p->left);
+			p->data = q->data;
+			p->left = delete(p->left,q->data);
+		  }else{
+		  	q = inpos(p->right);
+			p->data = q->data;
+			p->right = delete(p->right,q->data);
+
+		  }
+		}
+		return p;
+}
+
+
+
+int main(){
+   struct Node* minn;
+   int data,ch;
+   while(1){
+   printf("Enter 1-for Insert 2-for display 3-for Search Min 4-for Search Max 5-for Search any number 6-exit()");
+   printf("\n");
+   scanf("%d",&ch);
+
+   switch(ch){
+
+   	case 1:
+   	printf("Enter the number you want to insert\n");
+   	scanf("%d",&data);
+   	insert(data);
+   	break;
+   	case 2:
+   	inorder(head);
+   	break;
+   	case 3:
+   	minn = min();
+   	printf("%d",minn->data);
+   	break;
+   	case 4:
+   	max();
+   	break;
+   	case 5:
+   	printf("Enter the number you want to Search\n");
+   	scanf("%d",&data);
+   	if(Search(data))
+   		printf("Found");
+   	else
+   		printf("Not Found");
+   	break;
+   	case 6:
+   	exit(1);
+   	case 7:
+   		printf("Enter the number you want to DELETE\n");
+   	   scanf("%d",&data);
+   	delete(head,data);
+   }
+}
+	return 0;
+}
+
